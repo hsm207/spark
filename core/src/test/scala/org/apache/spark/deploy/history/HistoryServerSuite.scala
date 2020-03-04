@@ -39,8 +39,8 @@ import org.openqa.selenium.WebDriver
 import org.openqa.selenium.htmlunit.HtmlUnitDriver
 import org.scalatest.{BeforeAndAfter, Matchers}
 import org.scalatest.concurrent.Eventually
-import org.scalatest.mockito.MockitoSugar
-import org.scalatest.selenium.WebBrowser
+import org.scalatestplus.mockito.MockitoSugar
+import org.scalatestplus.selenium.WebBrowser
 
 import org.apache.spark._
 import org.apache.spark.internal.config._
@@ -84,7 +84,7 @@ class HistoryServerSuite extends SparkFunSuite with BeforeAndAfter with Matchers
       .set(IS_TESTING, true)
       .set(LOCAL_STORE_DIR, storeDir.getAbsolutePath())
       .set(EVENT_LOG_STAGE_EXECUTOR_METRICS, true)
-      .set(EVENT_LOG_PROCESS_TREE_METRICS, true)
+      .set(EXECUTOR_PROCESS_TREE_METRICS_ENABLED, true)
     conf.setAll(extraConf)
     provider = new FsHistoryProvider(conf)
     provider.checkForLogs()
@@ -185,7 +185,7 @@ class HistoryServerSuite extends SparkFunSuite with BeforeAndAfter with Matchers
     test(name) {
       val (code, jsonOpt, errOpt) = getContentAndCode(path)
       code should be (HttpServletResponse.SC_OK)
-      jsonOpt should be ('defined)
+      jsonOpt should be (Symbol("defined"))
       errOpt should be (None)
 
       val exp = IOUtils.toString(new FileInputStream(
